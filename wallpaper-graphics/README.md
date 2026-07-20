@@ -4,6 +4,8 @@ Custom digital backgrounds, built to order for $1 with unlimited revisions. Paid
 
 **Live site:** <https://wallpaper.graphics/>
 
+Includes a live cryptocurrency price ticker (BTC, ETH, USDT, TRX) integrated from the CoinGecko public API, with client-side caching to stay inside a strict rate limit — see [Live rates](#live-rates-and-why-theyre-cached).
+
 ---
 
 ## What this is
@@ -30,6 +32,17 @@ Three formats are offered, all at the same price:
 
 The rates bar calls the [CoinGecko public API](https://www.coingecko.com/en/api) directly from the browser, because Firebase Hosting serves static files and there's no server to proxy through.
 
+Endpoint:
+
+```
+GET https://api.coingecko.com/api/v3/simple/price
+      ?ids=bitcoin,ethereum,tether,tron
+      &vs_currencies=usd
+      &include_24hr_change=true
+```
+
+No API key required. The USDT figure is also mirrored into the payment section, so buyers can see the peg is holding when they send their $1.
+
 That tier allows only **5–15 requests per minute**, shared across every visitor. So the ticker is written defensively:
 
 | Behaviour | Reason |
@@ -37,10 +50,18 @@ That tier allows only **5–15 requests per minute**, shared across every visito
 | `sessionStorage` cache, 2 min TTL | Navigating or refreshing costs zero API calls |
 | Stale data painted instantly, refreshed in background | The bar is never empty while a request is in flight |
 | Last-known values kept for 30 min | A rate-limited response doesn't blank the display |
-| Bar hides itself if no data at all | Better than showing a broken row |
+| Explicit "rates unavailable" message on total failure | A silently vanishing bar is impossible to debug |
 | 8-second request timeout | A hanging call can't leave it stuck on "loading" |
 
-The status dot reflects this: green for fresh, amber for stale, grey for last-known.
+The status dot reflects which state you're in:
+
+| Dot | Meaning |
+|---|---|
+| Green | Fresh data, fetched within the last 2 minutes |
+| Amber | Stale data shown while a refresh runs |
+| Grey | Upstream unreachable — last known values, or an offline notice |
+
+The trade-off worth naming: because this runs client-side, the cache is per-visitor rather than shared. A hundred first-time visitors in a minute means a hundred API calls, and some will be rate-limited into the fallback path. A server-side proxy would collapse that to one call for everyone — the right fix if traffic grows, and the reason the same problem is solved properly [in a separate project](https://github.com/yiorgosantoni-max) rather than here.
 
 ## Structure
 

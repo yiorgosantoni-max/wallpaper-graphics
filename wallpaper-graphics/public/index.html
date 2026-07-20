@@ -113,24 +113,40 @@ nav{
 @media(max-width:820px){.nav-links{display:none}}
 
 /* TICKER BAR */
-.rates{border-bottom:1px solid var(--line);background:rgba(8,10,15,.6);overflow:hidden}
+.rates{border-bottom:1px solid var(--line);background:rgba(8,10,15,.6);overflow:hidden;position:relative}
 .rates-in{
   max-width:1180px;margin:0 auto;padding:8px 24px;
-  display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+  display:flex;align-items:center;gap:16px;
   font-family:'IBM Plex Mono',monospace;font-size:.76rem;
 }
-.rates-lbl{color:var(--dim);letter-spacing:.14em;text-transform:uppercase;font-size:.66rem;display:flex;align-items:center;gap:7px}
+.rates-lbl{
+  color:var(--dim);letter-spacing:.14em;text-transform:uppercase;font-size:.66rem;
+  display:flex;align-items:center;gap:7px;flex:none;
+  padding-right:16px;border-right:1px solid var(--line);
+}
 .rates-lbl i{width:6px;height:6px;border-radius:50%;background:var(--volt);box-shadow:0 0 8px var(--volt)}
 .rates-lbl i.stale{background:var(--amber);box-shadow:0 0 8px var(--amber)}
 .rates-lbl i.off{background:var(--dim);box-shadow:none}
-.rate{display:flex;align-items:baseline;gap:7px;white-space:nowrap}
+
+/* Marquee viewport */
+.rates-track{flex:1;overflow:hidden;position:relative;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.rates-move{display:inline-flex;gap:0;white-space:nowrap;animation:ticker 28s linear infinite;will-change:transform}
+.rates:hover .rates-move{animation-play-state:paused}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.rates-move{animation:none}}
+
+.rate{display:inline-flex;align-items:baseline;gap:7px;white-space:nowrap;padding:0 18px}
 .rate b{color:var(--ink);font-weight:500}
 .rate .px{color:var(--ink)}
 .rate .ch{font-size:.7rem}
 .rate .ch.up{color:var(--volt)}
 .rate .ch.dn{color:#ff5c72}
-.rate.load{color:var(--dim)}
-@media(max-width:640px){.rates-in{gap:14px;font-size:.72rem;padding:7px 16px}.rates-lbl{width:100%}}
+.rate.load{color:var(--dim);padding-left:0}
+@media(max-width:640px){
+  .rates-in{gap:12px;font-size:.72rem;padding:7px 14px}
+  .rates-lbl{font-size:.6rem;padding-right:12px}
+  .rate{padding:0 14px}
+}
 
 /* HERO */
 header{padding:96px 0 72px;text-align:center}
@@ -332,7 +348,9 @@ footer a{color:var(--volt);text-decoration:none}
 <div class="rates" id="rates">
   <div class="rates-in">
     <span class="rates-lbl"><i id="rateDot"></i><span id="rateStatus">Live rates</span></span>
-    <span class="rate load" id="rateList">loading market data…</span>
+    <div class="rates-track">
+      <div class="rates-move" id="rateList"><span class="rate load">loading market data…</span></div>
+    </div>
   </div>
 </div>
 
@@ -887,10 +905,15 @@ copyBtn.addEventListener('click', async () => {
 // fall back to the last good snapshot rather than showing an error.
 (function () {
   const COINS = [
-    { id: 'bitcoin',  sym: 'BTC'  },
-    { id: 'ethereum', sym: 'ETH'  },
-    { id: 'tether',   sym: 'USDT' },
-    { id: 'tron',     sym: 'TRX'  }
+    { id: 'bitcoin',      sym: 'BTC'  },
+    { id: 'ethereum',     sym: 'ETH'  },
+    { id: 'tether',       sym: 'USDT' },
+    { id: 'tron',         sym: 'TRX'  },
+    { id: 'binancecoin',  sym: 'BNB'  },
+    { id: 'solana',       sym: 'SOL'  },
+    { id: 'ripple',       sym: 'XRP'  },
+    { id: 'cardano',      sym: 'ADA'  },
+    { id: 'dogecoin',     sym: 'DOGE' }
   ];
   const KEY = 'wg_rates_v1';
   const TTL = 120000;   // 2 min fresh
@@ -906,20 +929,24 @@ copyBtn.addEventListener('click', async () => {
     : '$' + n.toFixed(4);
 
   function paint(data, state) {
-    $list.className = 'rate';
-    $list.innerHTML = COINS.map(c => {
+    const row = COINS.map(c => {
       const d = data[c.id];
       if (!d) return '';
-      const ch = d.usd_24h_change;
+      const ch = d.usd_24h_change ?? 0;
       const cls = ch >= 0 ? 'up' : 'dn';
       const arrow = ch >= 0 ? '▲' : '▼';
-      return `<span class="rate"><b>${c.sym}</b>
-        <span class="px">${price(d.usd)}</span>
-        <span class="ch ${cls}">${arrow}${Math.abs(ch ?? 0).toFixed(2)}%</span></span>`;
-    }).join(' &nbsp;&nbsp; ');
+      return `<span class="rate"><b>${c.sym}</b>`
+        + `<span class="px">${price(d.usd)}</span>`
+        + `<span class="ch ${cls}">${arrow}${Math.abs(ch).toFixed(2)}%</span></span>`;
+    }).join('');
+
+    // The track is duplicated so translateX(-50%) lands exactly on the
+    // start of the copy, making the loop seamless.
+    $list.className = 'rates-move';
+    $list.innerHTML = row + row;
 
     $dot.className = state === 'fresh' ? '' : state === 'stale' ? 'stale' : 'off';
-    $status.textContent = state === 'offline' ? 'Last known rates' : 'Live rates';
+    $status.textContent = state === 'offline' ? 'Last known' : 'Live rates';
 
     // Mirror the USDT peg into the payment section.
     const peg = document.getElementById('usdtPeg');
@@ -969,10 +996,11 @@ copyBtn.addEventListener('click', async () => {
       if (cached) {
         paint(cached.data, 'offline');
       } else {
-        $list.className = 'rate load';
-        $list.textContent = 'rates unavailable — retrying shortly';
+        $list.className = 'rates-move';
+        $list.style.animation = 'none';
+        $list.innerHTML = '<span class="rate load">rates unavailable — retrying shortly</span>';
         $dot.className = 'off';
-        $status.textContent = 'Rates offline';
+        $status.textContent = 'Offline';
         console.warn('[rates] fetch failed:', e.message);
       }
     }
