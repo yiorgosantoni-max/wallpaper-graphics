@@ -963,12 +963,17 @@ copyBtn.addEventListener('click', async () => {
       paint(data, 'fresh');
 
     } catch (e) {
-      // Never show an error in the header. Either keep the old numbers
-      // or hide the bar entirely.
+      // Keep the old numbers if we have them; otherwise say so plainly
+      // rather than hiding the bar (a silent disappearance is impossible
+      // to debug from the outside).
       if (cached) {
         paint(cached.data, 'offline');
       } else {
-        document.getElementById('rates').style.display = 'none';
+        $list.className = 'rate load';
+        $list.textContent = 'rates unavailable — retrying shortly';
+        $dot.className = 'off';
+        $status.textContent = 'Rates offline';
+        console.warn('[rates] fetch failed:', e.message);
       }
     }
   }
