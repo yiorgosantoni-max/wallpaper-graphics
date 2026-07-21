@@ -10,7 +10,7 @@
 <meta name="robots" content="index, follow">
 <meta name="p:domain_verify" content="afe01b0cf28a2f2e2e5266a110be4597"/>
 <meta name="theme-color" content="#231B15">
-<meta name="build" content="share-v10">
+<meta name="build" content="share-v15">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://wallpaper.graphics/">
@@ -218,8 +218,13 @@ a{color:inherit}
 .hero-in{display:grid;grid-template-columns:1.02fr .98fr;gap:56px;align-items:center;padding:74px 0 78px;position:relative;z-index:2}
 .kicker{display:inline-flex;align-items:center;gap:11px;font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gilt);margin-bottom:26px}
 .kicker::before{content:'';width:34px;height:1px;background:var(--gilt)}
-h1{font-family:Fraunces,serif;font-weight:300;font-size:clamp(2.6rem,5.4vw,4.6rem);line-height:1.0;letter-spacing:-.035em;margin-bottom:24px}
-h1 em{font-style:italic;font-weight:900;background:linear-gradient(96deg,var(--gilt) 0%,var(--gilt-lt) 42%,var(--gilt) 78%);-webkit-background-clip:text;background-clip:text;color:transparent}
+h1{font-family:Fraunces,serif;font-weight:300;font-size:clamp(2.6rem,5.4vw,4.6rem);line-height:1.12;letter-spacing:-.035em;margin-bottom:24px}
+/* background-clip:text crops to the glyph box, and the italic Fraunces f
+   swings well below the baseline - so give it room and pull it back. */
+h1 em{font-style:italic;font-weight:900;
+  background:linear-gradient(96deg,var(--gilt) 0%,var(--gilt-lt) 42%,var(--gilt) 78%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  display:inline-block;padding-bottom:.14em;margin-bottom:-.14em;padding-right:.06em}
 .lede{font-size:1.02rem;max-width:45ch;color:rgba(239,233,222,.68);margin-bottom:34px}
 .terms{display:inline-flex;align-items:stretch;margin-bottom:34px;border:1px solid rgba(201,150,47,.42);background:rgba(240,212,138,.05)}
 .terms .fig{font-family:Fraunces,serif;font-size:3rem;font-weight:900;line-height:1;padding:16px 22px;color:var(--gilt-lt);border-right:1px solid rgba(201,150,47,.42)}
@@ -232,10 +237,10 @@ h1 em{font-style:italic;font-weight:900;background:linear-gradient(96deg,var(--g
 .cta2{border:1px solid rgba(239,233,222,.3);color:var(--paper);background:transparent}
 .cta2:hover{border-color:var(--gilt);color:var(--gilt-lt)}
 .hang{display:flex;justify-content:center;perspective:1200px}
-.frame{position:relative;padding:15px;max-width:520px;width:100%;background:linear-gradient(145deg,#3A2C1E,#1B140E 45%,#3A2C1E);box-shadow:0 0 0 1px rgba(201,150,47,.55),0 34px 70px rgba(0,0,0,.6),inset 0 0 0 9px rgba(201,150,47,.16);transform:rotateY(-2.5deg) rotateX(1deg);transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.frame{position:relative;padding:11px;max-width:290px;width:100%;background:linear-gradient(145deg,#3A2C1E,#1B140E 45%,#3A2C1E);box-shadow:0 0 0 1px rgba(201,150,47,.55),0 34px 70px rgba(0,0,0,.6),inset 0 0 0 6px rgba(201,150,47,.16);transform:rotateY(-2.5deg) rotateX(1deg);transition:transform .7s cubic-bezier(.2,.8,.2,1)}
 .frame:hover{transform:rotateY(0) rotateX(0) translateY(-5px)}
-.frame::after{content:'';position:absolute;inset:15px;pointer-events:none;z-index:3;background:linear-gradient(118deg,rgba(255,255,255,.15) 0%,transparent 34%,transparent 66%,rgba(255,255,255,.05) 100%)}
-.frame img{width:100%;display:block;aspect-ratio:4/3;object-fit:cover;position:relative;z-index:2}
+.frame::after{content:'';position:absolute;inset:11px;pointer-events:none;z-index:3;background:linear-gradient(118deg,rgba(255,255,255,.15) 0%,transparent 34%,transparent 66%,rgba(255,255,255,.05) 100%)}
+.frame img{width:100%;height:201px;display:block;object-fit:cover;position:relative;z-index:2}
 .plaque{margin-top:16px;text-align:center;border-top:1px solid rgba(201,150,47,.3);padding-top:11px}
 .plaque .t{font-family:Fraunces,serif;font-style:italic;font-size:.92rem;color:var(--paper)}
 .plaque .s{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(201,150,47,.8);margin-top:5px}
@@ -1345,7 +1350,7 @@ footer a{color:var(--oxblood);text-decoration:none}
 
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
-console.log('wallpaper.graphics build share-v10');
+console.log('wallpaper.graphics build share-v15');
 
 // Copy the deposit address
 const copyBtn = document.getElementById('copyBtn');
@@ -1686,11 +1691,15 @@ document.querySelectorAll('.pick').forEach(btn => {
 // can duplicate a window or be stopped by a popup blocker.
 (function () {
   const SITE = 'https://wallpaper.graphics/';
+  // iPadOS reports itself as Mac, so check touch points as well.
+  const isMobile = /iP(hone|ad|od)|Android/.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const panel = document.getElementById('sharePanel');
   const spTitle = document.getElementById('spTitle');
   const spUrl = document.getElementById('spUrl');
   const spCopyLabel = document.getElementById('spCopyLabel');
   let current = { title: '', url: '' };
+  const webFallbacks = { wa: '', x: '' };
 
   function shareUrl(imgPath) {
     return SITE + 'p/' + imgPath.split('/').pop().replace(/\.[^.]+$/, '');
@@ -1706,9 +1715,25 @@ document.querySelectorAll('.pick').forEach(btn => {
     spUrl.textContent = url;
     spCopyLabel.textContent = 'Copy link';
 
-    document.getElementById('spWa').href = `https://api.whatsapp.com/send?text=${t}%20${u}`;
-    document.getElementById('spFb').href = `https://www.facebook.com/sharer/sharer.php?u=${u}`;
-    document.getElementById('spX').href  = `https://x.com/intent/post?url=${u}&text=${t}`;
+    // Mobile needs different targets. iOS hands facebook.com/sharer to the
+    // Facebook app, which has no handler for that path and simply opens its
+    // home feed - so phones get the OS share sheet for Facebook instead.
+    // X does have a working compose scheme, so use it directly.
+    document.getElementById('spWa').href = isMobile
+      ? `whatsapp://send?text=${t}%20${u}`
+      : `https://api.whatsapp.com/send?text=${t}%20${u}`;
+
+    document.getElementById('spX').href = isMobile
+      ? `twitter://post?message=${t}%20${u}`
+      : `https://x.com/intent/post?url=${u}&text=${t}`;
+
+    document.getElementById('spFb').href = isMobile
+      ? `https://m.facebook.com/sharer.php?u=${u}`
+      : `https://www.facebook.com/sharer/sharer.php?u=${u}`;
+
+    // Remember the web equivalents in case the app scheme goes nowhere.
+    webFallbacks.wa = `https://api.whatsapp.com/send?text=${t}%20${u}`;
+    webFallbacks.x  = `https://x.com/intent/post?url=${u}&text=${t}`;
 
     panel.classList.add('open');
     document.getElementById('spClose').focus();
@@ -1724,6 +1749,33 @@ document.querySelectorAll('.pick').forEach(btn => {
   panel.querySelectorAll('a.sp-link').forEach(a =>
     a.addEventListener('click', () => setTimeout(closePanel, 120)));
 
+  // App schemes do nothing when the app is absent, so watch for the page
+  // still being visible shortly after and fall back to the web dialog.
+  function withFallback(id, webUrl) {
+    const el = document.getElementById(id);
+    el.addEventListener('click', () => {
+      if (!isMobile) return;
+      const url = webUrl();
+      let gone = false;
+      const mark = () => { gone = true; };
+      document.addEventListener('visibilitychange', mark, { once: true });
+      window.addEventListener('pagehide', mark, { once: true });
+      setTimeout(() => {
+        document.removeEventListener('visibilitychange', mark);
+        window.removeEventListener('pagehide', mark);
+        if (!gone && !document.hidden) location.href = url;
+      }, 1500);
+    });
+  }
+
+  // Facebook has no share deep link - Meta removed pre-filled sharing into
+  // the app, and facebook.com/sharer opens the app's home feed on iOS rather
+  // than a composer. The mobile web dialog is the only one-tap route that
+  // actually posts the link, so phones get that instead of an OS share sheet.
+  document.getElementById('spFb').addEventListener('click', () => {
+    setTimeout(closePanel, 120);
+  });
+
   document.getElementById('spCopy').addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(current.url); }
     catch {
@@ -1738,6 +1790,9 @@ document.querySelectorAll('.pick').forEach(btn => {
     spCopyLabel.textContent = 'Copied';
     setTimeout(() => spCopyLabel.textContent = 'Copy link', 1600);
   });
+
+  withFallback('spWa', () => webFallbacks.wa);
+  withFallback('spX',  () => webFallbacks.x);
 
   document.querySelectorAll('.work .share .sh-btn').forEach(btn => {
     btn.addEventListener('click', e => {

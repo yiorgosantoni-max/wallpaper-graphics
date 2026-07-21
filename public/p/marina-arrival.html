@@ -31,36 +31,42 @@
 "availability":"https://schema.org/InStock","url":"https://wallpaper.graphics/"}}
 </script>
 
-<link rel="preload" as="image" href="https://wallpaper.graphics/img/marina-arrival.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,900;1,9..144,900&family=Karla:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-body{margin:0;background:#231B15;color:#EFE9DE;font-family:system-ui,sans-serif;
-display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px}
-img{max-width:min(560px,86vw);height:auto;display:block;margin:0 auto 20px;
-box-shadow:0 0 0 1px rgba(201,150,47,.5),0 24px 60px rgba(0,0,0,.6)}
-h1{font-size:1.2rem;font-weight:600;margin:0 0 8px}
-p{color:rgba(239,233,222,.6);font-size:.9rem;margin:0 0 18px;max-width:52ch}
-a{color:#C9962F}
+:root{--ink:#14100D;--paper:#EFE9DE;--wall:#231B15;--wall-2:#160F0B;
+--gilt:#C9962F;--gilt-lt:#F0D48A;--muted:rgba(239,233,222,.62)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(ellipse 70% 90% at 50% 30%,#2E241C 0%,var(--wall) 45%,var(--wall-2) 100%);
+  color:var(--paper);font-family:Karla,sans-serif;line-height:1.6;
+  display:grid;place-items:center;min-height:100vh;padding:32px 24px;text-align:center}
+.plate{max-width:660px;width:100%}
+.brand{font-family:Fraunces,serif;font-weight:900;font-size:1.15rem;
+  letter-spacing:-.03em;margin-bottom:26px;color:var(--paper);text-decoration:none;display:inline-block}
+.brand em{font-style:italic;font-weight:300}
+.frame{padding:12px;background:linear-gradient(145deg,#3A2C1E,#1B140E 45%,#3A2C1E);
+  box-shadow:0 0 0 1px rgba(201,150,47,.5),0 30px 66px rgba(0,0,0,.6);margin-bottom:22px}
+img{width:100%;height:auto;display:block}
+h1{font-family:Fraunces,serif;font-weight:600;font-size:1.5rem;
+  letter-spacing:-.02em;margin-bottom:8px}
+.fmt{font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gilt);margin-bottom:18px}
+.desc{color:var(--muted);font-size:.94rem;max-width:52ch;margin:0 auto 28px}
+.cta{display:inline-block;background:linear-gradient(100deg,var(--gilt),var(--gilt-lt) 55%,var(--gilt));
+  color:var(--wall-2);padding:14px 30px;text-decoration:none;font-size:.74rem;
+  letter-spacing:.18em;text-transform:uppercase;font-weight:700;transition:.25s}
+.cta:hover{box-shadow:0 0 0 1px var(--gilt-lt),0 10px 28px rgba(201,150,47,.3);transform:translateY(-2px)}
 </style>
 </head>
 <body>
-  <div>
-    <img src="https://wallpaper.graphics/img/marina-arrival.jpg" alt="Marina Arrival" width="2656" height="1600">
+  <div class="plate">
+    <a class="brand" href="https://wallpaper.graphics/">wallpaper<em>.graphics</em></a>
+    <div class="frame"><img src="https://wallpaper.graphics/share/marina-arrival.jpg" alt="Marina Arrival" width="1200" height="630"></div>
     <h1>Marina Arrival</h1>
-    <p>One figure · $2 · unlimited revisions</p>
-    <p>Taking you to the gallery — <a href="https://wallpaper.graphics/#cat">continue</a>.</p>
+    <div class="fmt">One figure · $2 · unlimited revisions</div>
+    <p class="desc">Door open on a black sedan, yachts and glass towers filling the window, gold catching the light on a peacock-print gown.</p>
+    <a class="cta" href="https://wallpaper.graphics/#cat">See the full catalogue</a>
   </div>
-  <script>
-  // Redirect real visitors only. Link crawlers (X/Twitterbot in particular
-  // runs JS, unlike Facebook's) must stay put long enough to read the Open
-  // Graph tags above, so we skip them by user-agent and delay for the rest.
-  (function () {
-    var ua = navigator.userAgent || '';
-    var isBot = /bot|crawl|spider|facebookexternalhit|twitterbot|slurp|linkedinbot|whatsapp|telegram|pinterest|embedly|quora|discord|preview|scraper/i.test(ua);
-    if (isBot) return;
-    setTimeout(function () {
-      location.replace("https://wallpaper.graphics/#cat");
-    }, 2500);
-  })();
-</script>
 </body>
 </html>

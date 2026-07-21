@@ -1,10 +1,10 @@
 # wallpaper.graphics
 
-Custom digital backgrounds, built to order for $1 with unlimited revisions. Paid in USDT crypto.
+Custom digital backgrounds, built to order from $1 with unlimited revisions. Paid in USDT crypto.
 
 **Live site:** <https://wallpaper.graphics/>
 
-A single-page static site with a 21-piece gallery, a lightbox, a live cryptocurrency ticker, real-time visitor presence, and live chat. No build step, no framework, no runtime dependencies.
+A single-page static site with a 24-piece gallery, a lightbox, a live cryptocurrency ticker, real-time visitor presence, and live chat. No build step, no framework, no runtime dependencies.
 
 ---
 
@@ -22,7 +22,7 @@ Three formats, same price:
 
 | Feature | Notes |
 |---|---|
-| **Gallery** | 21 pieces, format-tagged, lazy-loaded |
+| **Gallery** | 24 plates, 4 across, format-tagged, lazy-loaded |
 | **Lightbox** | Next/back buttons, arrow keys, touch swipe, neighbour preloading, focus restoration |
 | **Order form** | Assembles a structured brief and hands it to the visitor's mail client |
 | **"Order this style"** | Prefills the form with the chosen format and reference piece |
@@ -31,6 +31,7 @@ Three formats, same price:
 | **Live presence** | Real concurrent-viewer count with a country breakdown |
 | **Preloader** | Progress bar tied to actual image decoding |
 | **Live chat** | Tawk.to, loaded only after the preloader clears |
+| **Sharing** | In-page panel per plate; each plate has its own page under `/p/` with its own preview image |
 | **SEO** | OG and Twitter cards, `Service` and `FAQPage` JSON-LD, sitemap, robots.txt |
 
 ---
@@ -186,3 +187,57 @@ The `firebaseConfig` block in `index.html` is public by design. Firebase web con
 ## License
 
 Site code MIT. Gallery images are original work and not covered by that license.
+
+---
+
+## Per-plate share pages
+
+Social platforms fetch whatever `og:image` the shared URL declares, and they do
+not accept an image parameter. Sharing the homepage would therefore give every
+plate the same preview. So each plate has its own page:
+
+```
+public/p/{slug}.html      meta tags for that plate, then a JS redirect to the gallery
+public/share/{slug}.jpg   1200x630 preview card generated from the original
+```
+
+Three things make this work, each of which failed at least once while building it:
+
+- **No `<meta http-equiv="refresh">`.** Crawlers follow it and end up scraping
+  the homepage. The redirect is JavaScript-only and skips known crawler
+  user-agents entirely, so they stay long enough to read the tags.
+- **`canonical` points at the plate page**, not the site root. Pointing it at
+  the root tells Facebook the homepage is the real target.
+- **The preview is a purpose-built 1200x630 card**, not the 2656x1600 original.
+  X in particular fails silently on large images and falls back to a small card.
+
+Every image reference on a plate page — `og:image`, `twitter:image`, and the
+visible `<img>` — points at the same card, so there is nothing for a crawler to
+disagree about. JSON-LD keeps the full-resolution file for Google Images.
+
+**Testing:** every platform caches previews per URL and will not refetch. Append
+a query string (`?v=2`) to force a clean fetch. Facebook's debugger at
+`developers.facebook.com/tools/debug` has a "Scrape Again" button; its Redirect
+Path row shows whether a crawler is being bounced somewhere unintended.
+
+## Sharing UI
+
+Clicking share opens a panel rendered inside the page — WhatsApp, Facebook, X,
+copy link. The networks are plain `<a href>` links, so there is no
+`window.open` anywhere in the file. This was a deliberate rewrite: popup-based
+sharing broke differently on every platform (iOS Safari blocks `window.open`
+from anything it does not consider a direct user gesture; browser extensions
+can duplicate the call). A panel of links has no such failure modes.
+
+## Cache headers
+
+`firebase.json` sets HTML to `no-cache, must-revalidate` so deploys appear
+immediately. Images stay `immutable` for a year. If HTML is cached, Firebase's
+CDN keeps serving the old file after a deploy and Ctrl+F5 will not help.
+
+## Build marker
+
+`index.html` logs its build to the console (`wallpaper.graphics build share-v11`)
+and carries it as `<meta name="build">`. If the console does not show the build
+you just deployed, the file did not reach the server — check that before
+debugging anything else.
