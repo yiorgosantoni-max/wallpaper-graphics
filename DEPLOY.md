@@ -1,7 +1,7 @@
 # wallpaper.graphics — deploy notes
 
 ## One-time setup
-1. Create a Firebase project at https://console.firebase.google.com (project: `wallpapergraphics-b9ca1`).
+1. Create a Firebase project at https://console.firebase.google.com (suggested id: `wallpaper-graphics`).
    If you use a different id, update `.firebaserc`.
 2. Install the CLI and log in:
    npm install -g firebase-tools
