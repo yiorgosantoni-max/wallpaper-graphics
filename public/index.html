@@ -268,21 +268,26 @@ h1 em{font-style:italic;font-weight:900;background:linear-gradient(96deg,var(--g
 .fmt-card li::before{content:'—';position:absolute;left:0;color:var(--gilt)}
 
 /* CATALOGUE */
-.cat{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:44px 28px;margin-top:40px}
-.work{position:relative;display:flex;flex-direction:column}
-.work .mat{background:linear-gradient(150deg,#2C221A,var(--wall) 55%);padding:16px;position:relative;cursor:zoom-in;box-shadow:0 12px 34px rgba(20,16,13,.2);transition:padding .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;display:block}
-.work .mat:hover{padding:9px;box-shadow:0 20px 48px rgba(20,16,13,.34)}
+.cat{display:grid;grid-template-columns:repeat(3,1fr);gap:30px 24px;margin-top:40px}
+.work{position:relative;display:flex;flex-direction:column;background:rgba(228,220,204,.45);border:1px solid rgba(20,16,13,.14);overflow:hidden;transition:border-color .35s,box-shadow .35s}
+.work:hover{border-color:rgba(201,150,47,.55);box-shadow:0 16px 40px rgba(20,16,13,.16)}
+.work .mat{background:#14100D;position:relative;cursor:zoom-in;display:block;overflow:hidden}
+
 .work .mat::before{content:'';position:absolute;inset:0;border:1px solid rgba(201,150,47,0);transition:border-color .45s;pointer-events:none;z-index:3}
-.work .mat:hover::before{border-color:rgba(201,150,47,.5)}
-.work img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block;filter:saturate(.96);transition:filter .45s}
-.work .mat:hover img{filter:saturate(1.06)}
-.no{position:absolute;top:-14px;left:-9px;z-index:4;font-family:Fraunces,serif;font-size:1.5rem;font-weight:900;font-style:italic;color:var(--gilt);text-shadow:0 2px 10px rgba(20,16,13,.5)}
-.work .meta{display:flex;justify-content:space-between;gap:14px;align-items:baseline;padding-top:12px;margin-top:12px;border-top:1px solid rgba(20,16,13,.2)}
+.work:hover .mat::before{border-color:rgba(201,150,47,.45)}
+
+.work img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;filter:saturate(.96);transition:filter .45s,transform .7s cubic-bezier(.2,.8,.2,1)}
+.work:hover img{filter:saturate(1.06);transform:scale(1.03)}
+.no{position:absolute;top:9px;left:13px;z-index:4;font-family:Fraunces,serif;font-size:1.4rem;font-weight:900;font-style:italic;color:var(--gilt);text-shadow:0 2px 12px rgba(0,0,0,.9)}
+.work .meta{display:flex;justify-content:space-between;gap:14px;align-items:baseline;padding:16px 18px 0;border-top:none}
 .work h3{font-family:Fraunces,serif;font-weight:600;font-size:1.02rem;letter-spacing:-.014em}
 .work .fmt{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
 .work .fmt.solo{color:var(--oxblood)}
-.work p{font-size:.82rem;color:var(--muted);margin-top:6px;flex:1}
-.work-foot{margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+/* Clamped to three lines so every card in a row is the same height. The full
+   text is still in the DOM for search engines, and shows in the lightbox. */
+.work p{font-size:.82rem;color:var(--muted);margin-top:8px;padding:0 18px;flex:1;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.work-foot{margin-top:14px;padding:0 18px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .pick{
   background:transparent;border:1px solid rgba(20,16,13,.22);
   padding:8px 16px;font-family:inherit;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
