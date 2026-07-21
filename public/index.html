@@ -257,6 +257,12 @@ nav{
   .boot-ring::before,.boot-ring::after,.boot-core{animation:none}
 }
 
+/* Keep the chat bubble out of the way until the loader clears, and
+   clear of the viewer toast on small screens. */
+body:not(.booted) #tawkchat-container,
+body:not(.booted) iframe[title*="chat" i]{opacity:0!important;pointer-events:none!important}
+#tawkchat-container,iframe[title*="chat" i]{transition:opacity .4s}
+
 /* TICKER BAR */
 .rates{border-bottom:1px solid var(--line);background:rgba(8,10,15,.6);overflow:hidden;position:relative}
 .rates-in{
@@ -1153,6 +1159,7 @@ copyBtn.addEventListener('click', async () => {
     const wait = Math.max(0, MIN - (Date.now() - start));
     setTimeout(() => {
       boot.classList.add('done');
+      document.body.classList.add('booted');   // reveals the chat widget
       setTimeout(() => boot.remove(), 600);   // never trap focus or clicks
     }, wait + 220);
   }
@@ -1620,6 +1627,24 @@ try {
   wrap.style.display = 'none';
 }
 </script>
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+// Safety net: if the preloader never signals completion (JS error, blocked
+// resource), reveal the chat widget anyway after a few seconds.
+setTimeout(function(){ document.body.classList.add('booted'); }, 9000);
+
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/6a5f32e71f3a231d4a383216/1ju1ttmlf';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
 
 </body>
 </html>
