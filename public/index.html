@@ -10,7 +10,7 @@
 <meta name="robots" content="index, follow">
 <meta name="p:domain_verify" content="afe01b0cf28a2f2e2e5266a110be4597"/>
 <meta name="theme-color" content="#231B15">
-<meta name="build" content="share-v17">
+<meta name="build" content="share-v18">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://wallpaper.graphics/">
@@ -221,10 +221,16 @@ a{color:inherit}
 h1{font-family:Fraunces,serif;font-weight:300;font-size:clamp(2.6rem,5.4vw,4.6rem);line-height:1.12;letter-spacing:-.035em;margin-bottom:24px}
 /* background-clip:text crops to the glyph box, and the italic Fraunces f
    swings well below the baseline - so give it room and pull it back. */
+/* background-clip:text crops to the glyph's background box, which is tighter
+   than the ink itself. Heavy italic Fraunces overhangs ~6px right and ~16px
+   below the baseline at this size, so pad generously and cancel the padding
+   with matching negative margins to keep the layout unchanged. */
 h1 em{font-style:italic;font-weight:900;
   background:linear-gradient(96deg,var(--gilt) 0%,var(--gilt-lt) 42%,var(--gilt) 78%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
-  display:inline-block;padding-bottom:.14em;margin-bottom:-.14em;padding-right:.06em}
+  display:inline-block;
+  padding:.10em .16em .26em 0;
+  margin:-.10em -.16em -.26em 0}
 .lede{font-size:1.02rem;max-width:45ch;color:rgba(239,233,222,.68);margin-bottom:34px}
 .terms{display:inline-flex;align-items:stretch;margin-bottom:34px;border:1px solid rgba(201,150,47,.42);background:rgba(240,212,138,.05)}
 .terms .fig{font-family:Fraunces,serif;font-size:3rem;font-weight:900;line-height:1;padding:16px 22px;color:var(--gilt-lt);border-right:1px solid rgba(201,150,47,.42)}
@@ -1350,7 +1356,7 @@ footer a{color:var(--oxblood);text-decoration:none}
 
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
-console.log('wallpaper.graphics build share-v17');
+console.log('wallpaper.graphics build share-v18');
 
 // Copy the deposit address
 const copyBtn = document.getElementById('copyBtn');
