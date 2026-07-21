@@ -10,7 +10,7 @@
 <meta name="robots" content="index, follow">
 <meta name="p:domain_verify" content="afe01b0cf28a2f2e2e5266a110be4597"/>
 <meta name="theme-color" content="#231B15">
-<meta name="build" content="share-v7">
+<meta name="build" content="share-v10">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://wallpaper.graphics/">
@@ -300,8 +300,10 @@ h1 em{font-style:italic;font-weight:900;background:linear-gradient(96deg,var(--g
 .pick:hover{border-color:var(--gilt);color:var(--ink);background:rgba(240,212,138,.16)}
 
 /* SHARE */
+/* One control opens the in-page panel; the networks live inside it. */
 .share{display:flex;gap:3px;margin-left:auto}
-.share .sh-btn[data-net="share"]{display:none}
+.share .sh-btn{display:none}
+.share .sh-btn[data-net="share"]{display:grid}
 .sh-btn{
   width:25px;height:25px;display:grid;place-items:center;cursor:pointer;
   background:transparent;border:1px solid transparent;border-radius:50%;
@@ -356,6 +358,28 @@ select{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns=
 .faq details[open] summary::after{content:'–'}
 .faq p{color:var(--muted);font-size:.92rem;margin-top:12px;max-width:74ch}
 
+/* SHARE PANEL — rendered in the page, so nothing is popped or redirected */
+#sharePanel{position:fixed;inset:0;z-index:300;display:none;place-items:center;
+  background:rgba(11,8,6,.72);backdrop-filter:blur(3px);padding:24px}
+#sharePanel.open{display:grid}
+.sp-box{background:var(--paper);border:1px solid rgba(201,150,47,.5);
+  box-shadow:0 30px 80px rgba(0,0,0,.5);max-width:420px;width:100%;overflow:hidden}
+.sp-head{background:var(--wall);color:var(--paper);padding:16px 20px;
+  display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+.sp-head h4{font-family:Fraunces,serif;font-weight:600;font-style:italic;font-size:1rem}
+.sp-head button{background:none;border:none;color:var(--gilt);font-size:1.2rem;
+  cursor:pointer;line-height:1;padding:0 2px}
+.sp-body{padding:8px 0}
+.sp-link{display:flex;align-items:center;gap:14px;padding:13px 20px;
+  text-decoration:none;color:var(--ink);font-size:.92rem;transition:background .18s;
+  border:none;background:none;width:100%;font-family:inherit;text-align:left;cursor:pointer}
+.sp-link:hover{background:rgba(240,212,138,.22)}
+.sp-link svg{width:19px;height:19px;fill:var(--muted);flex:none}
+.sp-link:hover svg{fill:var(--oxblood)}
+.sp-link b{font-weight:500}
+.sp-url{padding:12px 20px 16px;border-top:1px solid rgba(20,16,13,.14);
+  font-size:.74rem;color:var(--faint);word-break:break-all}
+
 /* LIGHTBOX */
 .lb{position:fixed;inset:0;z-index:200;display:none;background:rgba(11,8,6,.97);padding:24px}
 .lb.open{display:grid;grid-template-rows:auto 1fr auto;gap:16px}
@@ -393,13 +417,7 @@ footer a{color:var(--oxblood);text-decoration:none}
   .mnav{display:none}
 }
 @media(max-width:680px){
-  /* On mobile the network icons all open the same OS share sheet, so showing
-     four of them would be misleading. Collapse to one share control, keeping
-     copy since it does something genuinely different. */
-  .share .sh-btn{display:none}
-  .share .sh-btn[data-net="share"],
-  .share .sh-btn[data-net="copy"]{display:grid}
-  .share{gap:6px}
+
   .cat{grid-template-columns:repeat(2,1fr)}
   .formats,.grid2{grid-template-columns:1fr}
   .terms .fig{font-size:2.3rem;padding:13px 18px}
@@ -1261,6 +1279,34 @@ footer a{color:var(--oxblood);text-decoration:none}
   </section>
 </div>
 
+<div id="sharePanel" role="dialog" aria-modal="true" aria-label="Share this plate">
+  <div class="sp-box">
+    <div class="sp-head">
+      <h4 id="spTitle">Share</h4>
+      <button type="button" id="spClose" aria-label="Close">&#10005;</button>
+    </div>
+    <div class="sp-body">
+      <a class="sp-link" id="spWa" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm5.1 14.1c-.2.6-1.2 1.2-1.7 1.2-.4 0-1 .1-3.3-.9-2.8-1.2-4.5-4-4.7-4.2-.1-.2-1-1.4-1-2.6 0-1.2.6-1.8.9-2 .2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.4.5-.3.3c-.1.1-.2.3 0 .5.2.4.8 1.3 1.7 2.1 1.1 1 2 1.3 2.3 1.4.2.1.4.1.5-.1l.8-1c.2-.2.3-.2.5-.1l2 1c.2.1.4.2.4.3.1.2.1.7 0 1.3Z"/></svg>
+        <b>WhatsApp</b>
+      </a>
+      <a class="sp-link" id="spFb" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12Z"/></svg>
+        <b>Facebook</b>
+      </a>
+      <a class="sp-link" id="spX" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M17.5 3h3.1l-6.8 7.8L21.8 21h-6.3l-4.9-6.4L4.9 21H1.8l7.3-8.3L1.6 3H8l4.4 5.9L17.5 3Z"/></svg>
+        <b>X</b>
+      </a>
+      <button class="sp-link" type="button" id="spCopy">
+        <svg viewBox="0 0 24 24"><path d="M10.6 13.4a1 1 0 0 0 1.4 0l3.5-3.5a2.5 2.5 0 0 0-3.5-3.5l-1.3 1.2 1.4 1.4 1.3-1.2a.5.5 0 0 1 .7.7l-3.5 3.5a1 1 0 0 0 0 1.4Zm2.8-2.8a1 1 0 0 0-1.4 0l-3.5 3.5a2.5 2.5 0 0 0 3.5 3.5l1.3-1.2-1.4-1.4-1.3 1.2a.5.5 0 0 1-.7-.7l3.5-3.5a1 1 0 0 0 0-1.4Z"/></svg>
+        <b id="spCopyLabel">Copy link</b>
+      </button>
+    </div>
+    <div class="sp-url" id="spUrl"></div>
+  </div>
+</div>
+
 <div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="Full size plate">
   <div class="lb-top">
     <span class="lb-count" id="lbCount">I / XXI</span>
@@ -1299,7 +1345,7 @@ footer a{color:var(--oxblood);text-decoration:none}
 
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
-console.log('wallpaper.graphics build share-v7');
+console.log('wallpaper.graphics build share-v10');
 
 // Copy the deposit address
 const copyBtn = document.getElementById('copyBtn');
@@ -1635,131 +1681,79 @@ document.querySelectorAll('.pick').forEach(btn => {
 });
 
 // ---- Sharing -----------------------------------------------------------
-// Instagram has no web share endpoint - it only accepts shares from its own
-// app - so the fifth button copies the link instead, which is what people
-// actually paste into a story or bio.
+// Everything happens inside the page: clicking a share icon opens a small
+// panel containing real <a> links. No window.open and no redirect, so nothing
+// can duplicate a window or be stopped by a popup blocker.
 (function () {
   const SITE = 'https://wallpaper.graphics/';
-  // iPadOS reports itself as Mac, so test for touch as well.
-  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent)
-    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  const isAndroid = /Android/.test(navigator.userAgent);
+  const panel = document.getElementById('sharePanel');
+  const spTitle = document.getElementById('spTitle');
+  const spUrl = document.getElementById('spUrl');
+  const spCopyLabel = document.getElementById('spCopyLabel');
+  let current = { title: '', url: '' };
 
-  // Each plate has its own page under /p/ carrying that plate's og:image.
-  // The share endpoints don't accept an image parameter - they fetch whatever
-  // the shared URL declares - so sharing the plate page is the only way to
-  // get a per-image preview.
   function shareUrl(imgPath) {
-    const slug = imgPath.split('/').pop().replace(/\.[^.]+$/, '');
-    return SITE + 'p/' + slug;   // cleanUrls is on, so no .html
+    return SITE + 'p/' + imgPath.split('/').pop().replace(/\.[^.]+$/, '');
   }
 
-  function urls(title, imgPath) {
-    const text = `"${title}" — a custom background from wallpaper.graphics, from $1 with unlimited revisions.`;
-    const u = encodeURIComponent(shareUrl(imgPath));
-    const t = encodeURIComponent(text);
-    return {
-      whatsapp: `https://api.whatsapp.com/send?text=${t}%20${u}`,
-      // iOS hands facebook.com/sharer to the Facebook app, which handles it
-      // poorly. The m. dialog stays in the browser and works reliably.
-      facebook: isIOS
-        ? `https://m.facebook.com/sharer.php?u=${u}`
-        : `https://www.facebook.com/sharer/sharer.php?u=${u}`,
-      // x.com is the current domain; twitter.com redirects, and the extra hop
-      // is where the iOS app tends to lose the card.
-      x:        `https://x.com/intent/post?url=${u}&text=${t}`
-    };
+  function openPanel(title, imgPath) {
+    const url = shareUrl(imgPath);
+    const text = `"${title}" \u2014 a custom background from wallpaper.graphics, from $1 with unlimited revisions.`;
+    const u = encodeURIComponent(url), t = encodeURIComponent(text);
+
+    current = { title, url };
+    spTitle.textContent = title;
+    spUrl.textContent = url;
+    spCopyLabel.textContent = 'Copy link';
+
+    document.getElementById('spWa').href = `https://api.whatsapp.com/send?text=${t}%20${u}`;
+    document.getElementById('spFb').href = `https://www.facebook.com/sharer/sharer.php?u=${u}`;
+    document.getElementById('spX').href  = `https://x.com/intent/post?url=${u}&text=${t}`;
+
+    panel.classList.add('open');
+    document.getElementById('spClose').focus();
   }
 
-  function flash(btn) {
-    btn.classList.add('done');
-    setTimeout(() => btn.classList.remove('done'), 1800);
-  }
+  function closePanel() { panel.classList.remove('open'); }
 
-  // Deliberately NOT async. iOS Safari only honours window.open when it runs
-  // synchronously inside the click handler; any await beforehand detaches it
-  // from the user gesture and the popup blocker kills it silently.
-  function go(btn, title, imgPath) {
-    const net = btn.dataset.net;
+  document.getElementById('spClose').addEventListener('click', closePanel);
+  panel.addEventListener('click', e => { if (e.target === panel) closePanel(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && panel.classList.contains('open')) closePanel();
+  });
+  panel.querySelectorAll('a.sp-link').forEach(a =>
+    a.addEventListener('click', () => setTimeout(closePanel, 120)));
 
-    if (net === 'copy') return copyLink(btn, imgPath);
-
-    // The combined mobile button hands off to the OS share sheet. The Share
-    // API only exists over HTTPS, so fall back to copying rather than doing
-    // nothing at all if it is unavailable.
-    if (net === 'share') {
-      if (navigator.share) {
-        navigator.share({
-          title: title,
-          text: `"${title}" — a custom background from wallpaper.graphics, from $1 with unlimited revisions.`,
-          url: shareUrl(imgPath)
-        }).catch(err => {
-          // AbortError just means the user dismissed the sheet.
-          if (err && err.name !== 'AbortError') copyLink(btn, imgPath);
-        });
-      } else {
-        copyLink(btn, imgPath);
-      }
-      return;
-    }
-
-    const link = urls(title, imgPath)[net];
-    if (!link) return;
-
-    // Mobile: the OS share sheet is the only mechanism that reliably reaches
-    // installed apps. WhatsApp has a working URL scheme, X's is unreliable,
-    // and Meta removed Facebook's entirely - so rather than special-casing
-    // each one, hand the whole thing to the system and let the user pick.
-    if ((isIOS || isAndroid) && navigator.share) {
-      navigator.share({
-        title: title,
-        text: `"${title}" — a custom background from wallpaper.graphics, from $1 with unlimited revisions.`,
-        url: shareUrl(imgPath)
-      }).catch(() => {});
-      return;
-    }
-
-    // Mobile browser without the Share API: navigate to the web dialog.
-    if (isIOS || isAndroid) { location.href = link; return; }
-
-    const w = window.open(link, '_blank', 'noopener');
-    if (!w) location.href = link;   // popup blocked elsewhere: navigate instead
-  }
-
-
-
-  async function copyLink(btn, imgPath) {
-    const link = shareUrl(imgPath);
-    try { await navigator.clipboard.writeText(link); }
+  document.getElementById('spCopy').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(current.url); }
     catch {
       const t = document.createElement('textarea');
-      t.value = link;
+      t.value = current.url;
       t.setAttribute('readonly', '');
       t.style.position = 'fixed'; t.style.opacity = '0';
       document.body.appendChild(t);
-      t.select(); t.setSelectionRange(0, 99999);   // iOS needs the explicit range
+      t.select(); t.setSelectionRange(0, 99999);
       document.execCommand('copy'); t.remove();
     }
-    btn.title = 'Link copied';
-    flash(btn);
-    setTimeout(() => btn.title = 'Copy link — for Instagram and elsewhere', 1800);
-  }
+    spCopyLabel.textContent = 'Copied';
+    setTimeout(() => spCopyLabel.textContent = 'Copy link', 1600);
+  });
 
-  // Catalogue cards
   document.querySelectorAll('.work .share .sh-btn').forEach(btn => {
     btn.addEventListener('click', e => {
+      e.preventDefault();
       e.stopPropagation();
       const card = btn.closest('.work');
-      go(btn, card.dataset.title, card.dataset.img);
+      openPanel(card.dataset.title, card.dataset.img);
     });
   });
 
-  // Lightbox bar — reads whichever plate is currently open
   document.querySelectorAll('#lbShare .sh-btn').forEach(btn => {
     btn.addEventListener('click', e => {
+      e.preventDefault();
       e.stopPropagation();
-      const s = SHOTS[idx];
-      go(btn, s.title, s.src);
+      const shot = SHOTS[idx];
+      openPanel(shot.title, shot.src);
     });
   });
 })();

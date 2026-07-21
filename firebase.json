@@ -10,12 +10,8 @@
         "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
       },
       {
-        "source": "/index.html",
-        "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }]
-      },
-      {
-        "source": "/p/**",
-        "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+        "source": "**/*.html",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache, must-revalidate" }]
       }
     ]
   }
