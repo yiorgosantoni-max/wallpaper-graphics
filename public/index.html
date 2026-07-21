@@ -1700,32 +1700,60 @@ document.querySelectorAll('.pick').forEach(btn => {
     setTimeout(() => btn.classList.remove('done'), 1800);
   }
 
-  async function go(btn, title, imgPath) {
+  // Deliberately NOT async. iOS Safari only honours window.open when it runs
+  // synchronously inside the click handler; any await beforehand detaches it
+  // from the user gesture and the popup blocker kills it silently.
+  function go(btn, title, imgPath) {
     const net = btn.dataset.net;
 
-    if (net === 'copy') {
-      const link = shareUrl(imgPath);
-      try { await navigator.clipboard.writeText(link); }
-      catch {
-        const t = document.createElement('textarea');
-        t.value = link; document.body.appendChild(t); t.select();
-        document.execCommand('copy'); t.remove();
-      }
-      btn.title = 'Link copied';
-      flash(btn);
-      setTimeout(() => btn.title = 'Copy link — for Instagram and elsewhere', 1800);
-      return;
-    }
+    if (net === 'copy') return copyLink(btn, imgPath);
 
     const link = urls(title, imgPath)[net];
-    if (link) window.open(link, '_blank', 'noopener,width=620,height=640');
+    if (!link) return;
+
+    const w = window.open(link, '_blank', 'noopener');
+    if (!w) location.href = link;   // popup blocked: navigate instead of failing silently
+  }
+
+  // Phones get the OS share sheet, which is both more familiar and immune to
+  // popup blocking. Shown only where the API exists and the screen is small.
+  function nativeShare(title, imgPath) {
+    if (!navigator.share) return false;
+    navigator.share({
+      title: title,
+      text: `"${title}" — a custom background from wallpaper.graphics, from $1 with unlimited revisions.`,
+      url: shareUrl(imgPath)
+    }).catch(() => {});   // user dismissed the sheet; nothing to do
+    return true;
+  }
+
+  async function copyLink(btn, imgPath) {
+    const link = shareUrl(imgPath);
+    try { await navigator.clipboard.writeText(link); }
+    catch {
+      const t = document.createElement('textarea');
+      t.value = link;
+      t.setAttribute('readonly', '');
+      t.style.position = 'fixed'; t.style.opacity = '0';
+      document.body.appendChild(t);
+      t.select(); t.setSelectionRange(0, 99999);   // iOS needs the explicit range
+      document.execCommand('copy'); t.remove();
+    }
+    btn.title = 'Link copied';
+    flash(btn);
+    setTimeout(() => btn.title = 'Copy link — for Instagram and elsewhere', 1800);
   }
 
   // Catalogue cards
+  const touch = matchMedia('(max-width: 700px)').matches;
+
   document.querySelectorAll('.work .share .sh-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
       const card = btn.closest('.work');
+      // Copy always behaves as copy; the rest hand off to the OS on phones.
+      if (touch && btn.dataset.net !== 'copy'
+          && nativeShare(card.dataset.title, card.dataset.img)) return;
       go(btn, card.dataset.title, card.dataset.img);
     });
   });
@@ -1735,6 +1763,7 @@ document.querySelectorAll('.pick').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
       const s = SHOTS[idx];
+      if (touch && btn.dataset.net !== 'copy' && nativeShare(s.title, s.src)) return;
       go(btn, s.title, s.src);
     });
   });

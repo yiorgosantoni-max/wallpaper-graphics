@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Zellige Courtyard at Golden Hour — wallpaper.graphics</title>
 <meta name="description" content="Moroccan riad with carved arches, tiled fountains and a turquoise pool holding the last of the evening light. Commission this style for $3 with unlimited revisions, paid in USDT.">
-<link rel="canonical" href="https://wallpaper.graphics/">
+<link rel="canonical" href="https://wallpaper.graphics/p/riad-poolside">
 
-<meta property="og:type" content="article">
+<meta property="og:type" content="website">
 <meta property="og:site_name" content="wallpaper.graphics">
 <meta property="og:url" content="https://wallpaper.graphics/p/riad-poolside">
 <meta property="og:title" content="Zellige Courtyard at Golden Hour — custom background, $3">
@@ -31,8 +31,6 @@
 "availability":"https://schema.org/InStock","url":"https://wallpaper.graphics/"}}
 </script>
 
-<!-- Humans go straight to the gallery; crawlers stay and read the tags above. -->
-<meta http-equiv="refresh" content="0; url=https://wallpaper.graphics/#cat">
 <link rel="preload" as="image" href="https://wallpaper.graphics/img/riad-poolside.jpg">
 <style>
 body{margin:0;background:#231B15;color:#EFE9DE;font-family:system-ui,sans-serif;
@@ -51,6 +49,18 @@ a{color:#C9962F}
     <p>Two or more · $3 · unlimited revisions</p>
     <p>Taking you to the gallery — <a href="https://wallpaper.graphics/#cat">continue</a>.</p>
   </div>
-  <script>location.replace("https://wallpaper.graphics/#cat");</script>
+  <script>
+  // Redirect real visitors only. Link crawlers (X/Twitterbot in particular
+  // runs JS, unlike Facebook's) must stay put long enough to read the Open
+  // Graph tags above, so we skip them by user-agent and delay for the rest.
+  (function () {
+    var ua = navigator.userAgent || '';
+    var isBot = /bot|crawl|spider|facebookexternalhit|twitterbot|slurp|linkedinbot|whatsapp|telegram|pinterest|embedly|quora|discord|preview|scraper/i.test(ua);
+    if (isBot) return;
+    setTimeout(function () {
+      location.replace("https://wallpaper.graphics/#cat");
+    }, 2500);
+  })();
+</script>
 </body>
 </html>
