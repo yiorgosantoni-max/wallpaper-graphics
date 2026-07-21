@@ -1672,6 +1672,9 @@ document.querySelectorAll('.pick').forEach(btn => {
 // actually paste into a story or bio.
 (function () {
   const SITE = 'https://wallpaper.graphics/';
+  // iPadOS reports itself as Mac, so test for touch as well.
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
   // Each plate has its own page under /p/ carrying that plate's og:image.
   // WhatsApp, Facebook and X don't accept an image parameter - they fetch
@@ -1711,21 +1714,15 @@ document.querySelectorAll('.pick').forEach(btn => {
     const link = urls(title, imgPath)[net];
     if (!link) return;
 
+    // iOS Safari blocks window.open from anything it does not consider a
+    // direct user gesture, and fails silently when it does. Navigating the
+    // current tab always works; the share site's own Back returns here.
+    if (isIOS) { location.href = link; return; }
+
     const w = window.open(link, '_blank', 'noopener');
-    if (!w) location.href = link;   // popup blocked: navigate instead of failing silently
+    if (!w) location.href = link;   // popup blocked elsewhere: navigate instead
   }
 
-  // Phones get the OS share sheet, which is both more familiar and immune to
-  // popup blocking. Shown only where the API exists and the screen is small.
-  function nativeShare(title, imgPath) {
-    if (!navigator.share) return false;
-    navigator.share({
-      title: title,
-      text: `"${title}" — a custom background from wallpaper.graphics, from $1 with unlimited revisions.`,
-      url: shareUrl(imgPath)
-    }).catch(() => {});   // user dismissed the sheet; nothing to do
-    return true;
-  }
 
   async function copyLink(btn, imgPath) {
     const link = shareUrl(imgPath);
@@ -1745,15 +1742,10 @@ document.querySelectorAll('.pick').forEach(btn => {
   }
 
   // Catalogue cards
-  const touch = matchMedia('(max-width: 700px)').matches;
-
   document.querySelectorAll('.work .share .sh-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
       const card = btn.closest('.work');
-      // Copy always behaves as copy; the rest hand off to the OS on phones.
-      if (touch && btn.dataset.net !== 'copy'
-          && nativeShare(card.dataset.title, card.dataset.img)) return;
       go(btn, card.dataset.title, card.dataset.img);
     });
   });
@@ -1763,7 +1755,6 @@ document.querySelectorAll('.pick').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
       const s = SHOTS[idx];
-      if (touch && btn.dataset.net !== 'copy' && nativeShare(s.title, s.src)) return;
       go(btn, s.title, s.src);
     });
   });
