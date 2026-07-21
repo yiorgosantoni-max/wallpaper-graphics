@@ -10,6 +10,7 @@
 <meta name="robots" content="index, follow">
 <meta name="p:domain_verify" content="afe01b0cf28a2f2e2e5266a110be4597"/>
 <meta name="theme-color" content="#231B15">
+<meta name="build" content="share-v7">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://wallpaper.graphics/">
@@ -1298,6 +1299,7 @@ footer a{color:var(--oxblood);text-decoration:none}
 
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
+console.log('wallpaper.graphics build share-v7');
 
 // Copy the deposit address
 const copyBtn = document.getElementById('copyBtn');
@@ -1682,16 +1684,21 @@ document.querySelectorAll('.pick').forEach(btn => {
 
     if (net === 'copy') return copyLink(btn, imgPath);
 
-    // The combined mobile button always goes to the OS share sheet.
+    // The combined mobile button hands off to the OS share sheet. The Share
+    // API only exists over HTTPS, so fall back to copying rather than doing
+    // nothing at all if it is unavailable.
     if (net === 'share') {
       if (navigator.share) {
         navigator.share({
           title: title,
           text: `"${title}" — a custom background from wallpaper.graphics, from $1 with unlimited revisions.`,
           url: shareUrl(imgPath)
-        }).catch(() => {});
+        }).catch(err => {
+          // AbortError just means the user dismissed the sheet.
+          if (err && err.name !== 'AbortError') copyLink(btn, imgPath);
+        });
       } else {
-        copyLink(btn, imgPath);   // no Share API: copying the link is the useful fallback
+        copyLink(btn, imgPath);
       }
       return;
     }
