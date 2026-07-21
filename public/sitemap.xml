@@ -1,9 +1,225 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://wallpaper.graphics/</loc>
-    <lastmod>2026-07-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/jungle-empress</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/jungle-empress.jpg</image:loc>
+      <image:title>Emerald Canopy Reverie</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/riad-poolside</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/riad-poolside.jpg</image:loc>
+      <image:title>Zellige Courtyard at Golden Hour</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/palm-terrace</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/palm-terrace.jpg</image:loc>
+      <image:title>Skyline Terrace, Peacock Blue</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/savannah-throne</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/savannah-throne.jpg</image:loc>
+      <image:title>Savannah Throne at Sundown</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/pearl-shell-shore</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/pearl-shell-shore.jpg</image:loc>
+      <image:title>Pearl Shell at Low Sun</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/dune-chaise</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/dune-chaise.jpg</image:loc>
+      <image:title>Dune Chaise, Meerkat Watch</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/colosseum-sunset</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/colosseum-sunset.jpg</image:loc>
+      <image:title>Colosseum, Amber Hour</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/palm-daybed</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/palm-daybed.jpg</image:loc>
+      <image:title>Date Palm Daybed</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/marina-arrival</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/marina-arrival.jpg</image:loc>
+      <image:title>Marina Arrival</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/giza-pavilion</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/giza-pavilion.jpg</image:loc>
+      <image:title>Giza Pavilion</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/dune-mirage</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/dune-mirage.jpg</image:loc>
+      <image:title>Dune Mirage</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/safari-veranda</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/safari-veranda.jpg</image:loc>
+      <image:title>Safari Veranda</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/burj-daybed</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/burj-daybed.jpg</image:loc>
+      <image:title>Date Palm Poolside</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/savannah-arches</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/savannah-arches.jpg</image:loc>
+      <image:title>Savannah Arches at Dusk</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/date-grove-throne</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/date-grove-throne.jpg</image:loc>
+      <image:title>Date Grove Throne</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/circuit-portrait</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/circuit-portrait.jpg</image:loc>
+      <image:title>Circuit Portrait</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/bosphorus-dunes</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/bosphorus-dunes.jpg</image:loc>
+      <image:title>Minarets and Surf</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/king-of-the-plain</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/king-of-the-plain.jpg</image:loc>
+      <image:title>King of the Plain</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/quantum-studio</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/quantum-studio.jpg</image:loc>
+      <image:title>Quantum Studio</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/twin-throne-plain</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/twin-throne-plain.jpg</image:loc>
+      <image:title>Twin Thrones on the Plain</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/broadcast-desk</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/broadcast-desk.jpg</image:loc>
+      <image:title>Broadcast Desk</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/banana-arrest</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/banana-arrest.jpg</image:loc>
+      <image:title>Arrested for Eating a Banana</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/castaway-cove</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/castaway-cove.jpg</image:loc>
+      <image:title>Castaway Cove, Coral Hour</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://wallpaper.graphics/p/banana-arrest-ii</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://wallpaper.graphics/img/banana-arrest-ii.jpg</image:loc>
+      <image:title>Arrested for Eating a Banana II</image:title>
+    </image:image>
   </url>
 </urlset>

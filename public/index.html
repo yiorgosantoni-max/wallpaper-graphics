@@ -1673,15 +1673,24 @@ document.querySelectorAll('.pick').forEach(btn => {
 (function () {
   const SITE = 'https://wallpaper.graphics/';
 
+  // Each plate has its own page under /p/ carrying that plate's og:image.
+  // WhatsApp, Facebook and X don't accept an image parameter - they fetch
+  // whatever the shared URL declares - so sharing the plate page is the only
+  // way to get a per-image preview. Pinterest takes media= directly.
+  function shareUrl(imgPath) {
+    const slug = imgPath.split('/').pop().replace(/\.[^.]+$/, '');
+    return SITE + 'p/' + slug;   // cleanUrls is on, so no .html
+  }
+
   function urls(title, imgPath) {
     const text = `"${title}" — a custom background from wallpaper.graphics, from $1 with unlimited revisions.`;
-    const u = encodeURIComponent(SITE);
+    const u = encodeURIComponent(shareUrl(imgPath));
     const t = encodeURIComponent(text);
     return {
       whatsapp: `https://api.whatsapp.com/send?text=${t}%20${u}`,
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${u}`,
       x:        `https://twitter.com/intent/tweet?url=${u}&text=${t}`,
-      pinterest:`https://pinterest.com/pin/create/button/?url=${u}`
+      pinterest:`https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl(imgPath))}`
         + `&media=${encodeURIComponent(SITE + imgPath)}&description=${t}`
     };
   }
@@ -1695,10 +1704,11 @@ document.querySelectorAll('.pick').forEach(btn => {
     const net = btn.dataset.net;
 
     if (net === 'copy') {
-      try { await navigator.clipboard.writeText(SITE); }
+      const link = shareUrl(imgPath);
+      try { await navigator.clipboard.writeText(link); }
       catch {
         const t = document.createElement('textarea');
-        t.value = SITE; document.body.appendChild(t); t.select();
+        t.value = link; document.body.appendChild(t); t.select();
         document.execCommand('copy'); t.remove();
       }
       btn.title = 'Link copied';
