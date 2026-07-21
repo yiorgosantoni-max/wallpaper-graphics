@@ -1624,8 +1624,14 @@ document.querySelectorAll('.pick').forEach(btn => {
     const t = encodeURIComponent(text);
     return {
       whatsapp: `https://api.whatsapp.com/send?text=${t}%20${u}`,
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${u}`,
-      x:        `https://twitter.com/intent/tweet?url=${u}&text=${t}`
+      // iOS hands facebook.com/sharer to the Facebook app, which handles it
+      // poorly. The m. dialog stays in the browser and works reliably.
+      facebook: isIOS
+        ? `https://m.facebook.com/sharer.php?u=${u}`
+        : `https://www.facebook.com/sharer/sharer.php?u=${u}`,
+      // x.com is the current domain; twitter.com redirects, and the extra hop
+      // is where the iOS app tends to lose the card.
+      x:        `https://x.com/intent/post?url=${u}&text=${t}`
     };
   }
 
