@@ -1608,6 +1608,7 @@ document.querySelectorAll('.pick').forEach(btn => {
   // iPadOS reports itself as Mac, so test for touch as well.
   const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent)
     || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isAndroid = /Android/.test(navigator.userAgent);
 
   // Each plate has its own page under /p/ carrying that plate's og:image.
   // The share endpoints don't accept an image parameter - they fetch whatever
@@ -1651,13 +1652,63 @@ document.querySelectorAll('.pick').forEach(btn => {
     const link = urls(title, imgPath)[net];
     if (!link) return;
 
-    // iOS Safari blocks window.open from anything it does not consider a
-    // direct user gesture, and fails silently when it does. Navigating the
-    // current tab always works; the share site's own Back returns here.
-    if (isIOS) { location.href = link; return; }
+    if (isIOS || isAndroid) {
+      // Try the native app first via its URL scheme. If the app isn't
+      // installed nothing happens, so we fall back to the web dialog after a
+      // short delay - and cancel that fallback if the page goes hidden,
+      // which is how we know the app actually opened.
+      const scheme = appScheme(net, title, imgPath);
+      if (scheme) return openApp(scheme, link);
+
+      // Facebook has no share deep link - Meta removed pre-filled sharing
+      // into the app. The OS share sheet is the only route that reaches the
+      // installed Facebook app, so use it here and only here.
+      if (net === 'facebook' && navigator.share) {
+        navigator.share({
+          title: title,
+          text: `"${title}" — a custom background from wallpaper.graphics, from $1 with unlimited revisions.`,
+          url: shareUrl(imgPath)
+        }).catch(() => {});
+        return;
+      }
+
+      location.href = link;
+      return;
+    }
 
     const w = window.open(link, '_blank', 'noopener');
     if (!w) location.href = link;   // popup blocked elsewhere: navigate instead
+  }
+
+  // Native app URL schemes. Only X exposes a usable compose deep link;
+  // Meta closed off pre-filled sharing into the Facebook app, so Facebook
+  // necessarily goes through the web dialog.
+  function appScheme(net, title, imgPath) {
+    const url = shareUrl(imgPath);
+    const text = `"${title}" — a custom background from wallpaper.graphics, from $1 with unlimited revisions.`;
+    if (net === 'x') {
+      return 'twitter://post?message=' + encodeURIComponent(text + ' ' + url);
+    }
+    if (net === 'whatsapp') {
+      return 'whatsapp://send?text=' + encodeURIComponent(text + ' ' + url);
+    }
+    return null;
+  }
+
+  function openApp(scheme, webFallback) {
+    let cancelled = false;
+    const onHide = () => { cancelled = true; };
+    document.addEventListener('visibilitychange', onHide, { once: true });
+    window.addEventListener('pagehide', onHide, { once: true });
+
+    location.href = scheme;
+
+    setTimeout(() => {
+      document.removeEventListener('visibilitychange', onHide);
+      window.removeEventListener('pagehide', onHide);
+      // Still here and still visible => the app never opened.
+      if (!cancelled && !document.hidden) location.href = webFallback;
+    }, 1400);
   }
 
 
